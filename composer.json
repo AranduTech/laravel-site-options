@@ -1,0 +1,22 @@
+{
+    "name": "arandu/laravel-site-options",
+    "autoload": {
+        "psr-4": {
+            "Arandu\\LaravelSiteOptions\\": "src/"
+        },
+        "files": [
+            "helpers/functions.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Bruno Polo",
+            "email": "brunopolo@poli.ufrj.br"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/support": "^8.83",
+        "illuminate/database": "^8.83"
+    }
+}
