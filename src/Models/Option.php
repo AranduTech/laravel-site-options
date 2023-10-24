@@ -82,7 +82,7 @@ class Option extends Model
      *
      * @return bool
      */
-    public static function exists($key)
+    public static function has($key)
     {
         if (config('site-options.cache.enabled', true)) {
             return Cache::has(config('site-options.cache.key', 'site_options').':'.$key);
