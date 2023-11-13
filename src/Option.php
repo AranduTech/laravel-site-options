@@ -1,24 +1,27 @@
 <?php
 
-namespace Arandu\LaravelSiteOptions\Models;
+namespace Arandu\LaravelSiteOptions;
 
+use Arandu\LaravelSiteOptions\Support\Serialize;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class Option extends Model
 {
-    protected $fillable = [
-        'key',
-        'value',
-    ];
+    protected $fillable = ['key'];
 
+    /**
+     * Get the table associated with the model.
+     * 
+     * @return string 
+     */
     public function getTable()
     {
         return config('site-options.table', 'site_options');
     }
 
     /**
-     * Função `mutator` para retornar o valor da opção.
+     * Accessor function to get the value of the option.
      *
      * @param string $value
      *
@@ -26,38 +29,41 @@ class Option extends Model
      */
     public function getValueAttribute($value)
     {
-        return maybe_unserialize($value);
+        
+        return Serialize::maybeDecode($value);
     }
 
     /**
-     * Função `mutator` para setar o valor da opção.
+     * Mutator function to set the value of the option.
      *
      * @param mixed $value
      */
     public function setValueAttribute($value)
     {
-        if (is_array($value)) {
-            $this->attributes['value'] = serialize($value);
-
+        if (is_string($value)) {
+            $this->attributes['value'] = $value;
             return;
         }
-        $this->attributes['value'] = $value;
+        $this->attributes['value'] = Serialize::encode($value);
     }
 
     /**
-     * Obtém uma opção no banco de dados
+     * Get the value of an option
      *
-     * @param mixed $key     O nome da opção
-     * @param bool  $default O valor que será retornado, caso a opção não exista
+     * @param mixed $key     Option name
+     * @param bool  $default Default value if option is not found
      *
-     * @return mixed O valor da opção
+     * @return mixed Option value
      */
-    public static function get($key, $default = false)
+    public static function get($key, $default = null)
     {
         $getOption = function () use ($key, $default) {
             $option = self::where('key', $key)->first();
 
             if (!$option) {
+                if (is_null($default) && config('site-options.hard_defaults.'.$key, false)) {
+                    return config('site-options.hard_defaults.'.$key);
+                }
                 return $default;
             }
 
@@ -76,25 +82,22 @@ class Option extends Model
     }
 
     /**
-     * Verifica se uma opção existe
+     * Check if an option exists
      *
-     * @param mixed $key O nome da opção
+     * @param mixed $key   Option name
      *
      * @return bool
      */
     public static function has($key)
     {
-        if (config('site-options.cache.enabled', true)) {
-            return Cache::has(config('site-options.cache.key', 'site_options').':'.$key);
-        }
         return (bool) self::where('key', $key)->first();
     }
 
     /**
-     * Escreve o valor de uma opção
+     * Set the value of an option
      *
-     * @param mixed $key   O nome da opção
-     * @param mixed $value O valor da opção
+     * @param mixed $key   Option name
+     * @param mixed $value Option value
      */
     public static function set($key, $value)
     {
@@ -115,9 +118,9 @@ class Option extends Model
     }
 
     /**
-     * Remove uma opção do banco, se existir
+     * Remove an option
      *
-     * @param mixed $key O nome da opção
+     * @param mixed $key Option name
      */
     public static function rm($key)
     {

@@ -1,19 +1,37 @@
 <?php
 
-if (!function_exists('maybe_unserialize')) {
-    function maybe_unserialize($data)
-    {
-        if (is_serialized($data)) { // Don't attempt to unserialize data that wasn't serialized going in.
-            return @unserialize(trim($data));
-        }
+namespace Arandu\LaravelSiteOptions\Support;
 
-        return $data;
+class Serialize
+{
+    /**
+     * Encode the given value.
+     * 
+     * @param mixed $value
+     * @return string 
+     */
+    public static function encode($value)
+    {
+        return serialize($value);
     }
-}
 
-if (!function_exists('is_serialized')) {
-    function is_serialized($data, $strict = true)
+    /**
+     * Decode the given value.
+     * @param mixed $value 
+     * @return mixed 
+     */
+    public static function decode($value)
     {
+        return @unserialize(trim($value));
+    }
+
+    /**
+     * Check if the given value is serialized.
+     * @param mixed $data 
+     * @param bool $strict 
+     * @return bool 
+     */
+    public static function isEncoded($data, $strict = true) {
         // If it isn't a string, it isn't serialized.
         if (!is_string($data)) {
             return false;
@@ -69,5 +87,19 @@ if (!function_exists('is_serialized')) {
                 return (bool) preg_match("/^{$token}:[0-9.E+-]+;$end/", $data);
         }
         return false;
+    }
+
+    /**
+     * Maybe decode the given value. If it's not serialized, return it as-is.
+     * @param mixed $data 
+     * @return mixed 
+     */
+    public static function maybeDecode($data)
+    {
+        if (self::isEncoded($data)) {
+            // don't attempt to unserialize data that wasn't serialized going in
+            return self::decode($data);
+        }
+        return $data;
     }
 }
