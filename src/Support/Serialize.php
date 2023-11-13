@@ -102,4 +102,15 @@ class Serialize
         }
         return $data;
     }
+
+    /**
+     * Maybe encode the given value. If it's a string, return it as-is.
+     */
+    public static function maybeEncode($data)
+    {
+        if (is_string($data)) {
+            return $data;
+        }
+        return self::encode($data);
+    }
 }

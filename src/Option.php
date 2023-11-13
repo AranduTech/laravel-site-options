@@ -57,22 +57,31 @@ class Option extends Model
      */
     public static function get($key, $default = null)
     {
-        $getOption = function () use ($key, $default) {
-            $option = self::where('key', $key)->first();
+        $exists = self::has($key);
 
-            if (!$option) {
+        $getOption = function () use ($key, $default, $exists) {
+            if (!$exists) {
                 if (is_null($default) && config('site-options.hard_defaults.'.$key, false)) {
                     return config('site-options.hard_defaults.'.$key);
                 }
                 return $default;
             }
 
+            $option = self::where('key', $key)->first();
+
             return $option->value;
         };
 
-        if (config('site-options.cache.enabled', true)) {
+        $cacheKey = config('site-options.cache.key', 'site_options').':'.$key;
+
+        if (!is_null($default)) {
+            // Include default value in the cache key
+            $cacheKey .= ':'.md5(Serialize::maybeEncode($default));
+        }
+
+        if (config('site-options.cache.enabled', true) && $exists) {
             return Cache::remember(
-                config('site-options.cache.key', 'site_options').':'.$key,
+                $cacheKey,
                 config('site-options.cache.ttl', 60 * 24 * 7),
                 $getOption
             );
@@ -90,7 +99,7 @@ class Option extends Model
      */
     public static function has($key)
     {
-        return (bool) self::where('key', $key)->first();
+        return self::query()->where('key', $key)->exists();
     }
 
     /**
