@@ -50,7 +50,7 @@ The `config/site-options.php` file is responsible for defining configurations re
 
 - `table`: Specifies the database table name where site options are stored.
 - `cache`: Contains settings for caching site options.
-  - `enabled`: Boolean value to enable or disable cache.
+  - `enabled`: Boolean value to enable or disable cache. Can be set via the `.env` file using `SITE_OPTIONS_CACHE_ENABLED`.
   - `key`: The cache key under which site options are stored.
   - `ttl`: Time-to-live for the cache, in minutes. Can be set via the `.env` file using `SITE_OPTIONS_CACHE_TTL`.
 - `hard_defaults`: Provides a way to set default values for options not present in the database. These can be overridden when using `Option::get()`.
