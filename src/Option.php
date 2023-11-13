@@ -40,11 +40,7 @@ class Option extends Model
      */
     public function setValueAttribute($value)
     {
-        if (is_string($value)) {
-            $this->attributes['value'] = $value;
-            return;
-        }
-        $this->attributes['value'] = Serialize::encode($value);
+        $this->attributes['value'] = Serialize::maybeEncode($value);
     }
 
     /**
