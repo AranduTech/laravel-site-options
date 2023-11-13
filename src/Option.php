@@ -74,11 +74,6 @@ class Option extends Model
 
         $cacheKey = config('site-options.cache.key', 'site_options').':'.$key;
 
-        if (!is_null($default)) {
-            // Include default value in the cache key
-            $cacheKey .= ':'.md5(Serialize::maybeEncode($default));
-        }
-
         if (config('site-options.cache.enabled', true) && $exists) {
             return Cache::remember(
                 $cacheKey,
