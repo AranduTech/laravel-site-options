@@ -1,6 +1,6 @@
 <?php
 
-// This is a helper file to add some missing methods that 
+// This is a helper file to add some missing methods that
 // exists on a Laravel project but not on a standalone package.
 // This file should never be included. It is meant to be read
 // by your IDE or code analyzer.

@@ -5,6 +5,11 @@
             "Arandu\\LaravelSiteOptions\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Arandu\\LaravelSiteOptions\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Bruno Polo",
@@ -22,5 +27,8 @@
                 "Arandu\\LaravelSiteOptions\\SiteOptionsServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.10"
     }
 }
