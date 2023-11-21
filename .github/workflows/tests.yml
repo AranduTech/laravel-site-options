@@ -65,11 +65,9 @@ jobs:
 
             - uses: paulhatch/semantic-version@v5.2.1
               id: semver
-              with:
-                tag_prefix: "v"
 
             - name: Publish Github Release
               uses: softprops/action-gh-release@v1
               with:
-                tag_name: ${{ steps.semver.outputs.version }}
+                tag_name: v${{ steps.semver.outputs.version }}
                 draft: false
