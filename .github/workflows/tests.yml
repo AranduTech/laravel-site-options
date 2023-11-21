@@ -13,11 +13,27 @@ jobs:
         strategy:
             matrix:
                 php: [7.4, 8.0]
-                database: [sqlite]
+                database: [mysql, mariadb, sqlite]
                 release: [stable, lowest]
                 include:
                     - database: sqlite
                       pdo: sqlite
+
+        services:
+            mysql:
+                image: mysql:latest
+                env:
+                    MYSQL_ROOT_PASSWORD: password
+                    MYSQL_DATABASE: test
+                ports:
+                    - 3306
+            mariadb:
+                image: mariadb:latest
+                env:
+                    MYSQL_ROOT_PASSWORD: password
+                    MYSQL_DATABASE: test
+                ports:
+                    - 3306
         
         steps:
             - uses: actions/checkout@v3
@@ -38,3 +54,5 @@ jobs:
                 composer test
               env:
                 DATABASE: ${{ matrix.database }}
+                MYSQL_PORT: ${{ job.services.mysql.ports[3306] }}
+                MARIADB_PORT: ${{ job.services.mariadb.ports[3306] }}
