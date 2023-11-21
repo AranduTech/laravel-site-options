@@ -8,16 +8,6 @@ use Arandu\LaravelSiteOptions\Support\Serialize;
 class SerializationTest extends TestCase
 {
 
-    protected $samples = [
-        's:4:"test";' => 'test',
-        'i:3;' => 3,
-        'd:3.5;' => 3.5,
-        'a:1:{s:3:"foo";s:3:"bar";}' => ['foo' => 'bar'],
-        'b:1;' => true,
-        'b:0;' => false,
-        'N;' => null,
-    ];
-
     /** @test */
     public function encode()
     {

@@ -12,6 +12,20 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
 
+    protected $samples = [
+        's:4:"test";' => 'test',
+        'i:3;' => 3,
+        'd:3.5;' => 3.5,
+        'a:1:{s:3:"foo";s:3:"bar";}' => ['foo' => 'bar'],
+        'b:1;' => true,
+        'b:0;' => false,
+        'N;' => null,
+    ];
+
+    protected $database;
+
+    protected $db;
+
     protected function getPackageProviders($app)
     {
         return [SiteOptionsServiceProvider::class];
@@ -31,8 +45,16 @@ abstract class TestCase extends BaseTestCase
         $db->setAsGlobal();
         $db->bootEloquent();
 
+        $this->db = $db;
+
         $this->migrate();
 
+    }
+
+    protected function tearDown(): void
+    {
+        $this->db->getConnection()->disconnect();
+        parent::tearDown();
     }
 
     protected function migrate()
@@ -43,6 +65,8 @@ abstract class TestCase extends BaseTestCase
             $table->string('key')->unique();
             $table->longText('value')->nullable();
             $table->timestamps();
+
+            $table->index('key');
         });
 
     }

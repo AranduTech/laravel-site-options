@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('key')->unique();
             $table->longText('value')->nullable();
             $table->timestamps();
+
+            $table->index('key');
         });
     }
 

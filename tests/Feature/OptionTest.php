@@ -4,59 +4,73 @@ namespace Arandu\LaravelSiteOptions\Tests\Feature;
 
 use Arandu\LaravelSiteOptions\Option;
 use Arandu\LaravelSiteOptions\Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 class OptionTest extends TestCase
 {
-    /** @test */
-    public function checkOptionInsertionAndRetrieval()
-    {
-        Option::set('name', 'value');
 
-        $this->assertEquals('value', Option::get('name'));
+    /** @test */
+    public function verifyOptionSet()
+    {
+        foreach ($this->samples as $serialized => $unserialized) {
+            $key = Str::random();
+            Option::set($key, $unserialized);
+            $data = $this->db->table('site_options')->where('key', $key)->first();
+            $this->assertEquals(is_string($unserialized) ? $unserialized : $serialized, $data->value);
+        }
     }
 
     /** @test */
-    public function checkOptionUpdate()
+    public function verifyOptionGet()
     {
-        Option::set('name', 'value');
-
-        Option::set('name', 'new value');
-
-        $this->assertEquals('new value', Option::get('name'));
+        foreach ($this->samples as $serialized => $unserialized) {
+            $key = Str::random();
+            $this->db->table('site_options')->insert(['key' => $key, 'value' => is_string($unserialized) ? $unserialized : $serialized]);
+            $this->assertEquals($unserialized, Option::get($key));
+        }
     }
 
     /** @test */
-    public function checkOptionHas()
+    public function verifyOptionRewrite()
     {
-        Option::set('name', 'value');
-
-        $this->assertTrue(Option::has('name'));
+        foreach ($this->samples as $unserialized) {
+            $key = Str::random();
+            $this->db->table('site_options')->insert(['key' => $key, 'value' => 'foo']);
+            Option::set($key, $unserialized);
+            $this->assertEquals(Option::get($key), $unserialized);
+        }
     }
 
     /** @test */
-    public function checkOptionDeletion()
+    public function verifyOptionGetWithDefault()
     {
-        Option::set('name', 'value');
-
-        Option::rm('name');
-
-        $this->assertFalse(Option::has('name'));
+        foreach ($this->samples as $unserialized) {
+            $key = Str::random();
+            $this->assertEquals($unserialized, Option::get($key, $unserialized));
+        }
     }
 
     /** @test */
-    public function checkOptionRetrievalWithDefault()
+    public function verifyOptionExists()
     {
-        $this->assertEquals('default', Option::get('name', 'default'));
+        foreach ($this->samples as $serialized => $unserialized) {
+            $key = Str::random();
+            $this->assertFalse(Option::has($key));
+            $this->db->table('site_options')->insert(['key' => $key, 'value' => is_string($unserialized) ? $unserialized : $serialized]);
+            $this->assertTrue(Option::has($key));
+        }
     }
 
     /** @test */
-    public function checkArrayOption()
+    public function verifyOptionDelete()
     {
-        Option::set('name', ['foo' => 'bar']);
-
-        $this->assertEquals(['foo' => 'bar'], Option::get('name'));
+        foreach ($this->samples as $serialized => $unserialized) {
+            $key = Str::random();
+            $this->db->table('site_options')->insert(['key' => $key, 'value' => is_string($unserialized) ? $unserialized : $serialized]);
+            Option::rm($key);
+            $this->assertFalse($this->db->table('site_options')->where('key', $key)->exists());
+        }
     }
-    
-
 
 }
