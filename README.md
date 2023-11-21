@@ -1,5 +1,7 @@
 # Laravel Site Options
 
+[![Tests](https://github.com/AranduTech/laravel-site-options/actions/workflows/tests.yml/badge.svg)](https://github.com/AranduTech/laravel-site-options/actions/workflows/tests.yml)
+
 Extra small package for storing global site options on database, with caching support.
 
 ## Installation
