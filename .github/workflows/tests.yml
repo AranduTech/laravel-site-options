@@ -1,0 +1,36 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                php: [7.4, 8.0]
+                database: [sqlite]
+                release: [stable, lowest]
+                include:
+                    - database: sqlite
+                      pdo: sqlite
+        
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                fetch-depth: 2
+            - uses: actions/cache@v3
+              with:
+                path: ~/.cache/composer/files
+                key: php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+            - uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php }}
+                coverage: none
+                tools: pecl
+                extensions: bcmath, ctype, json, mbstring, openssl, pdo, pdo_${{ matrix.pdo }}, tokenizer, xml
+            - run: composer update --no-interaction --no-progress --prefer-dist --prefer-${{ matrix.release }}
+            - run: |
+                composer test
+              env:
+                DATABASE: ${{ matrix.database }}
