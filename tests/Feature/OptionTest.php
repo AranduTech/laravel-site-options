@@ -43,7 +43,7 @@ class OptionTest extends TestCase
             $key = 'option_' . $i;
             $this->db->table('site_options')->insert(['key' => $key, 'value' => 'foo']);
             Option::set($key, $unserialized);
-            $this->assertEquals(Option::get($key), $unserialized);
+            $this->assertEquals($unserialized, Option::get($key));
             $i++;
         }
     }

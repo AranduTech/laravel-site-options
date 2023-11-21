@@ -4,7 +4,7 @@ namespace Arandu\LaravelSiteOptions\Tests\Feature;
 
 class HardDefaultWithoutCacheTest extends HardDefaultTest
 {
-    
+
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);

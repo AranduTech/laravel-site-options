@@ -6,7 +6,6 @@ namespace Arandu\LaravelSiteOptions\Tests;
 
 use Arandu\LaravelSiteOptions\SiteOptionsServiceProvider;
 use Illuminate\Database\Capsule\Manager as DB;
-use Illuminate\Testing\Concerns\TestDatabases;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
