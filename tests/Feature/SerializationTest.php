@@ -39,13 +39,8 @@ class SerializationTest extends TestCase
     {
         foreach ($this->samples as $serialized => $unserialized) {
             $this->assertTrue(Serialize::isEncoded($serialized));
+            $this->assertFalse(Serialize::isEncoded($unserialized));
         }
-    }
-
-    /** @test */
-    public function isNotEncoded()
-    {
-        $this->assertFalse(Serialize::isEncoded('test'));
     }
 
     /** @test */
