@@ -60,6 +60,8 @@ abstract class TestCase extends BaseTestCase
     protected function migrate()
     {
 
+        DB::schema()->dropAllTables();
+
         DB::schema()->create('site_options', function ($table) {
             $table->id();
             $table->string('key')->unique();
