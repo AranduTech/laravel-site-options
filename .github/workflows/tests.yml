@@ -18,6 +18,10 @@ jobs:
                 include:
                     - database: sqlite
                       pdo: sqlite
+                    - database: mariadb
+                      pdo: mysql
+                    - database: mysql
+                      pdo: mysql
 
         services:
             mysql:
