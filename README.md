@@ -78,7 +78,7 @@ The following table relates Laravel Framework versions to the corresponding Lara
 | ----------------- | -------------------- |
 | 8.x               | 1.x                  |
 | 9.x               | 2.x                  |
-| 10.x              | 3.x (planned, dev branch available) |
+| 10.x              | 3.x                  |
 
 ## Testing
 
