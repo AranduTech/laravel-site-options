@@ -6,9 +6,13 @@ use Arandu\LaravelSiteOptions\Support\Serialize;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+define('SITE_OPTIONS_DEFAULT_VALUE', uniqid('site_options_default_value_', true));
+
 class Option extends Model
 {
     protected $fillable = ['key'];
+
+    const DEFAULT_VALUE = SITE_OPTIONS_DEFAULT_VALUE;
 
     /**
      * Get the table associated with the model.
@@ -46,16 +50,19 @@ class Option extends Model
     /**
      * Get the value of an option
      *
-     * @param mixed $key     Option name
-     * @param bool  $default Default value if option is not found
+     * @param string $key     Option name
+     * @param mixed  $default Default value if option is not found
      *
      * @return mixed Option value
      */
-    public static function get($key, $default = null)
+    public static function get($key, $default = self::DEFAULT_VALUE)
     {
         if (!self::has($key)) {
-            if (is_null($default) && config('site-options.hard_defaults.'.$key, false)) {
-                return config('site-options.hard_defaults.'.$key);
+            if ($default === self::DEFAULT_VALUE) {
+                if (!is_null(config('site-options.hard_defaults.'.$key))) {
+                    return config('site-options.hard_defaults.'.$key);
+                }
+                return null;
             }
             return $default;
         }
@@ -80,7 +87,7 @@ class Option extends Model
     /**
      * Check if an option exists
      *
-     * @param mixed $key   Option name
+     * @param string $key   Option name
      *
      * @return bool
      */
@@ -92,7 +99,7 @@ class Option extends Model
     /**
      * Set the value of an option
      *
-     * @param mixed $key   Option name
+     * @param string $key   Option name
      * @param mixed $value Option value
      */
     public static function set($key, $value)
@@ -116,7 +123,7 @@ class Option extends Model
     /**
      * Remove an option
      *
-     * @param mixed $key Option name
+     * @param string $key Option name
      */
     public static function rm($key)
     {

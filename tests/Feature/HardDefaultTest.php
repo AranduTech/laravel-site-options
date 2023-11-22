@@ -15,6 +15,7 @@ class HardDefaultTest extends TestCase
         $i = 1;
         foreach ($this->samples as $serialized => $value) {
             $app['config']->set('site-options.hard_defaults.option_'.$i, $value);
+            $app['config']->set('site-options.hard_defaults.option_'.$i.'_default', 'foo');
             $i++;
         }
     }
@@ -37,6 +38,8 @@ class HardDefaultTest extends TestCase
         foreach ($this->samples as $unserialized) {
             $key = 'option_' . $i;
             $this->assertEquals('foo', Option::get($key, 'foo'));
+            $this->assertEquals($unserialized, Option::get($key . '_default', $unserialized));
+
             $i++;
         }
     }
