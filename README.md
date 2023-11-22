@@ -68,6 +68,16 @@ Configure the package in `config/site-options.php`:
 
 To adjust these settings, edit the `config/site-options.php` file. For environment-specific settings, use the `.env` file.
 
+## Versions
+
+The following table relates Laravel Framework versions to the corresponding Laravel Site Options versions:
+
+| Laravel Framework | Laravel Site Options |
+| ----------------- | -------------------- |
+| 8.x               | 1.x                  |
+| 9.x               | 2.x                  |
+| 10.x              | 3.x (planned)        |
+
 ## Issues
 
 If you discover any issues, please use the [GitHub issue tracker](https://github.com/AranduTech/laravel-site-options/issues).
@@ -79,7 +89,6 @@ Please refer to [SECURITY.md](SECURITY.md) for more information.
 ## Contributing
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
 
 ## License
 
