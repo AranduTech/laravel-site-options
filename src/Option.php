@@ -53,16 +53,14 @@ class Option extends Model
      */
     public static function get($key, $default = null)
     {
-        $exists = self::has($key);
-
-        $getOption = function () use ($key, $default, $exists) {
-            if (!$exists) {
-                if (is_null($default) && config('site-options.hard_defaults.'.$key, false)) {
-                    return config('site-options.hard_defaults.'.$key);
-                }
-                return $default;
+        if (!self::has($key)) {
+            if (is_null($default) && config('site-options.hard_defaults.'.$key, false)) {
+                return config('site-options.hard_defaults.'.$key);
             }
+            return $default;
+        }
 
+        $getOption = function () use ($key) {           
             $option = self::where('key', $key)->first();
 
             return $option->value;
@@ -70,15 +68,13 @@ class Option extends Model
 
         $cacheKey = config('site-options.cache.key', 'site_options').':'.$key;
 
-        if (config('site-options.cache.enabled', true) && $exists) {
-            return Cache::remember(
+        return config('site-options.cache.enabled', true)
+            ? Cache::remember(
                 $cacheKey,
                 config('site-options.cache.ttl', 60 * 24 * 7),
                 $getOption
-            );
-        }
-
-        return $getOption();
+            )
+            : $getOption();
     }
 
     /**
