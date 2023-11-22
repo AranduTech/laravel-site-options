@@ -6,7 +6,15 @@
 >
     <testsuites>
         <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
+            <!-- <directory suffix="Test.php">./tests/Feature</directory> -->
+            <file>./tests/Feature/SerializationTest.php</file>
+            <file>./tests/Feature/OptionTest.php</file>
+            <file>./tests/Feature/OptionWithoutCacheTest.php</file>
+            <file>./tests/Feature/OptionWithHardDefaultTest.php</file>
+            <file>./tests/Feature/HardDefaultTest.php</file>
+            <file>./tests/Feature/HardDefaultWithoutCacheTest.php</file>
+            <file>./tests/Feature/CacheTest.php</file>
+            <file>./tests/Feature/TurnOffCacheTest.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
