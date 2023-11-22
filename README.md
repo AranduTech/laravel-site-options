@@ -2,61 +2,83 @@
 
 [![Tests](https://github.com/AranduTech/laravel-site-options/actions/workflows/tests.yml/badge.svg)](https://github.com/AranduTech/laravel-site-options/actions/workflows/tests.yml)
 
-Extra small package for storing global site options on database, with caching support.
+Laravel Site Options is a lightweight package designed for Laravel applications to manage global site settings seamlessly. It provides a straightforward interface for storing and retrieving dictionary-oriented options from the database, with built-in caching capabilities for enhanced performance.
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require arandu/laravel-site-options
 ```
 
-Publish config and migration files:
+Publish the configuration and migration files:
 
 ```bash
 php artisan vendor:publish --provider="Arandu\LaravelSiteOptions\SiteOptionsServiceProvider"
 ```
 
-Run the migration:
+Execute the migration to set up the database table:
 
 ```bash
 php artisan migrate
 ```
 
-## Usage
+## Basic Usage
+
+The package provides a fluent, expressive API for managing site options:
 
 ``` php
 use Arandu\LaravelSiteOptions\Option;
 
-// Set option
-Option::set('option_name', 'option value');
-Option::set('option_name', ['arrays' => 'are valid']);
+// Storing options
+Option::set('welcome_message', 'Hello, World!');
+Option::set('site_settings', ['theme' => 'dark', 'layout' => 'wide']);
 
-// Get option
-Option::get('option_name');
-Option::get('option_name', 'default_value');
+// Retrieving options
+echo Option::get('welcome_message');
+$settings = Option::get('site_settings', $fallbackSettings);
 
-// Check if option exists
-Option::has('option_name');
+// Checking existence
+if (Option::has('maintenance_mode')) {
+    // Perform action
+}
 
-// Delete option
-Option::rm('option_name');
+// Removing options
+Option::rm('outdated_option');
 ```
 
-## Site Options Configuration
+## Application Examples
 
-The `config/site-options.php` file is responsible for defining configurations related to site options in the application. This includes settings for the database table, caching, and default values.
+ - **Feature Toggles**: Manage feature flags for enabling or disabling application features dynamically.
+ - **Site Settings**: Store and retrieve global site settings like site name, logo, etc.
+ - **Third-party Integrations**: Store and retrieve API keys and other credentials for third-party integrations.
+ - **Configurable Content**: Store and retrieve content that can be configured by the user, like a custom footer, or how much time to wait before showing a popup.
+ - Many more...
 
-### Configuration Details
+## Configuration
 
-- `table`: Specifies the database table name where site options are stored.
-- `cache`: Contains settings for caching site options.
-  - `enabled`: Boolean value to enable or disable cache. Can be set via the `.env` file using `SITE_OPTIONS_CACHE_ENABLED`.
-  - `key`: The cache key under which site options are stored.
-  - `ttl`: Time-to-live for the cache, in minutes. Can be set via the `.env` file using `SITE_OPTIONS_CACHE_TTL`.
-- `hard_defaults`: Provides a way to set default values for options not present in the database. These can be overridden when using `Option::get()`.
+Configure the package in `config/site-options.php`:
 
-### Editing Configuration
+ - `table`: Name of the database table for storing options.
+ - `cache`: Caching settings.
+   - `enabled`: Toggle caching (true/false). Settable in `.env` as `SITE_OPTIONS_CACHE_ENABLED`.
+   - `key`: Cache key for storing options.
+   - `ttl`: Cache TTL in minutes. Settable in `.env` as `SITE_OPTIONS_CACHE_TTL`.
+ - `hard_defaults`: Hard-coded default values for options, overridable in `Option::get()`.
 
-To modify these configurations, edit the `config/site-options.php` file directly. For environment-specific settings like cache TTL, use the `.env` file to provide different values for different deployment environments.
+To adjust these settings, edit the `config/site-options.php` file. For environment-specific settings, use the `.env` file.
+
+## Issues
+
+If you discover any issues, please use the [GitHub issue tracker](https://github.com/AranduTech/laravel-site-options/issues).
+
+## Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
