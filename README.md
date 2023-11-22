@@ -52,9 +52,8 @@ Option::rm('outdated_option');
 
  - **Feature Toggles**: Manage feature flags for enabling or disabling application features dynamically.
  - **Site Settings**: Store and retrieve global site settings like site name, logo, etc.
- - **Third-party Integrations**: Store and retrieve API keys and other credentials for third-party integrations.
- - **Configurable Content**: Store and retrieve content that can be configured by the user, like a custom footer, or how much time to wait before showing a popup.
- - Many more...
+ - **Configurable Content**: Store and retrieve content that can be configured by some administrator user, like the phone number on the footer, or how much time to wait before showing a popup.
+ - And whatever else you can think of!
 
 ## Configuration
 
@@ -72,6 +71,10 @@ To adjust these settings, edit the `config/site-options.php` file. For environme
 ## Issues
 
 If you discover any issues, please use the [GitHub issue tracker](https://github.com/AranduTech/laravel-site-options/issues).
+
+## Security
+
+Please refer to [SECURITY.md](SECURITY.md) for more information.
 
 ## Contributing
 
