@@ -48,6 +48,8 @@ if (Option::has('maintenance_mode')) {
 Option::rm('outdated_option');
 ```
 
+ > This package utilizes PHP serialization to store and retrieve options. Therefore, you could store any [serializable](https://www.php.net/manual/pt_BR/function.serialize.php) data type. However, you should avoid storing objects, as they could cause subtle bugs that are hard to debug. Read more in the [serialization section](.docs/advanced.md#serialization).
+
 ## Application Examples
 
  - **Feature Toggles**: Manage feature flags for enabling or disabling application features dynamically.
@@ -77,6 +79,14 @@ The following table relates Laravel Framework versions to the corresponding Lara
 | 8.x               | 1.x                  |
 | 9.x               | 2.x                  |
 | 10.x              | 3.x (planned, dev branch available) |
+
+## Testing
+
+To run the tests, run the following command from the project folder:
+
+``` bash
+composer test
+```
 
 ## Issues
 

@@ -12,6 +12,4 @@ When using `laravel-site-options`, it's crucial to ensure the security of data, 
 
 5. **Responsibility**: Remember, securing the data inputted through this package is the responsibility of the developer. Use Laravel's built-in security features to enhance protection.
 
-6. **Encrypt Data**: If you need to store sensitive data in the database, consider encrypting it first. Laravel provides a convenient way to do this using the `encrypt` and `decrypt` helpers.
-
 If you discover any security-related issues, please email to bruno@arandutech.com.br

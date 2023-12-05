@@ -9,7 +9,7 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create(config('site-options.table', 'site_options'), function (Blueprint $table) {
+        Schema::create('site_options', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
             $table->longText('value')->nullable();
