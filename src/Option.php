@@ -6,18 +6,21 @@ use Arandu\LaravelSiteOptions\Support\Serialize;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
-define('SITE_OPTIONS_DEFAULT_VALUE', uniqid('site_options_default_value_', true));
+if (!defined('SITE_OPTIONS_DEFAULT_VALUE')) {
+    define('SITE_OPTIONS_DEFAULT_VALUE', uniqid('site_options_default_value_', true));
+}
 
 class Option extends Model
 {
     protected $fillable = ['key'];
+    protected array $attributes = [];
 
     const DEFAULT_VALUE = SITE_OPTIONS_DEFAULT_VALUE;
 
     /**
      * Get the table associated with the model.
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function getTable()
     {
@@ -33,7 +36,7 @@ class Option extends Model
      */
     public function getValueAttribute($value)
     {
-        
+
         return Serialize::maybeDecode($value);
     }
 
@@ -57,18 +60,19 @@ class Option extends Model
      */
     public static function get($key, $default = self::DEFAULT_VALUE)
     {
-        if (!self::has($key)) {
-            if ($default === self::DEFAULT_VALUE) {
+        if (is_null($key) || !static::has($key)) {
+            if ($default === static::DEFAULT_VALUE) {
                 if (!is_null(config('site-options.hard_defaults.'.$key))) {
                     return config('site-options.hard_defaults.'.$key);
                 }
                 return null;
             }
+
             return $default;
         }
 
-        $getOption = function () use ($key) {           
-            $option = self::where('key', $key)->first();
+        $getOption = function () use ($key) {
+            $option = static::where('key', $key)->first();
 
             return $option->value;
         };
@@ -87,25 +91,33 @@ class Option extends Model
     /**
      * Check if an option exists
      *
-     * @param string $key   Option name
+     * @param ?string $key   Option name
      *
      * @return bool
      */
-    public static function has($key)
+    public static function has(?string $key)
     {
-        return self::query()->where('key', $key)->exists();
+        if (!filled($key)) {
+            return false;
+        }
+
+        return static::query()->where('key', $key)->exists();
     }
 
     /**
      * Set the value of an option
      *
-     * @param string $key   Option name
+     * @param ?string $key   Option name
      * @param mixed $value Option value
      */
-    public static function set($key, $value)
+    public static function set(?string $key, $value)
     {
-        $findOption = self::where('key', $key)->first();
-        $option = $findOption ?: new self([
+        if (!filled($key)) {
+            return false;
+        }
+
+        $findOption = static::where('key', $key)->first();
+        $option = $findOption ?: new static([
             'key' => $key,
         ]);
         $option->value = $value;
@@ -123,18 +135,20 @@ class Option extends Model
     /**
      * Remove an option
      *
-     * @param string $key Option name
+     * @param ?string $key Option name
      */
-    public static function rm($key)
+    public static function rm(?string $key)
     {
-        $findOption = self::where('key', $key)->first();
-        if (!$findOption) {
-            return;
+        if (!filled($key)) {
+            return false;
         }
-        $findOption->delete();
+
+        $optionWasDeleted = static::where('key', $key)->first()?->delete();
 
         if (config('site-options.cache.enabled', true)) {
             Cache::forget(config('site-options.cache.key', 'site_options').':'.$key);
         }
+
+        return $optionWasDeleted;
     }
 }
