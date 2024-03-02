@@ -12,7 +12,7 @@ if (!function_exists('is_unserializable')) {
     {
         $data = is_string($data) ? trim($data) : null;
 
-        if (!$data || !(strlen($data) === 2 && $data === 'N;') || strlen($data) < 4) {
+        if (!$data || (strlen($data) === 2 && $data !== 'N;') || strlen($data) < 4) {
             return false;
         }
 
