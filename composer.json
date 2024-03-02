@@ -3,7 +3,10 @@
     "autoload": {
         "psr-4": {
             "Arandu\\LaravelSiteOptions\\": "src/"
-        }
+        },
+        "files": [
+            "files/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
