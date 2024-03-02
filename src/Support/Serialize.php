@@ -6,9 +6,9 @@ class Serialize
 {
     /**
      * Encode the given value.
-     * 
+     *
      * @param mixed $value
-     * @return string 
+     * @return string
      */
     public static function encode($value)
     {
@@ -17,19 +17,19 @@ class Serialize
 
     /**
      * Decode the given value.
-     * @param mixed $value 
-     * @return mixed 
+     * @param mixed $value
+     * @return mixed
      */
     public static function decode($value)
     {
-        return @unserialize(trim($value));
+        return try_unserialize(trim($value));
     }
 
     /**
      * Check if the given value is serialized.
-     * @param mixed $data 
-     * @param bool $strict 
-     * @return bool 
+     * @param mixed $data
+     * @param bool $strict
+     * @return bool
      */
     public static function isEncoded($data, $strict = true) {
         // If it isn't a string, it isn't serialized.
@@ -91,15 +91,16 @@ class Serialize
 
     /**
      * Maybe decode the given value. If it's not serialized, return it as-is.
-     * @param mixed $data 
-     * @return mixed 
+     * @param mixed $data
+     * @return mixed
      */
     public static function maybeDecode($data)
     {
-        if (self::isEncoded($data)) {
+        if (static::isEncoded($data)) {
             // don't attempt to unserialize data that wasn't serialized going in
-            return self::decode($data);
+            return static::decode($data);
         }
+
         return $data;
     }
 
@@ -111,6 +112,6 @@ class Serialize
         if (is_string($data)) {
             return $data;
         }
-        return self::encode($data);
+        return static::encode($data);
     }
 }
