@@ -10,10 +10,12 @@ if (!defined('SITE_OPTIONS_DEFAULT_VALUE')) {
     define('SITE_OPTIONS_DEFAULT_VALUE', uniqid('site_options_default_value_', true));
 }
 
+/**
+ * @property array $attributes
+ */
 class Option extends Model
 {
     protected $fillable = ['key'];
-    protected array $attributes = [];
 
     const DEFAULT_VALUE = SITE_OPTIONS_DEFAULT_VALUE;
 
