@@ -5,6 +5,7 @@ namespace Arandu\LaravelSiteOptions;
 use Arandu\LaravelSiteOptions\Support\Serialize;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Arr;
 
 if (!defined('SITE_OPTIONS_DEFAULT_VALUE')) {
     define('SITE_OPTIONS_DEFAULT_VALUE', uniqid('site_options_default_value_', true));
@@ -38,7 +39,6 @@ class Option extends Model
      */
     public function getValueAttribute($value)
     {
-
         return Serialize::maybeDecode($value);
     }
 
@@ -62,16 +62,19 @@ class Option extends Model
      */
     public static function get($key, $default = self::DEFAULT_VALUE)
     {
-        if (is_null($key) || !static::has($key)) {
+        if (is_null($key)) {
             if ($default === static::DEFAULT_VALUE) {
-                if (!is_null(config('site-options.hard_defaults.'.$key))) {
-                    return config('site-options.hard_defaults.'.$key);
-                }
                 return null;
             }
 
-            return $default;
         }
+
+        if (!is_null(config('site-options.hard_defaults.'.$key))) {
+            return config('site-options.hard_defaults.'.$key, $default);
+        }
+
+        $afterKey = str_contains($key, '.') ? str($key)->after('.')->toString() : '';
+        $key = str($key)->before('.')->toString();
 
         $getOption = function () use ($key) {
             $option = static::where('key', $key)->first();
@@ -81,13 +84,21 @@ class Option extends Model
 
         $cacheKey = config('site-options.cache.key', 'site_options').':'.$key;
 
-        return config('site-options.cache.enabled', true)
+        $returned = config('site-options.cache.enabled', true)
             ? Cache::remember(
                 $cacheKey,
                 config('site-options.cache.ttl', 60 * 24 * 7),
                 $getOption
             )
             : $getOption();
+
+        $default = $default === static::DEFAULT_VALUE ? null : $default;
+
+        if ($afterKey === '' || is_null($afterKey)) {
+            return $returned;
+        }
+
+        return Arr::get(Arr::wrap($returned), $afterKey, $default);
     }
 
     /**
