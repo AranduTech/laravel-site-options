@@ -62,27 +62,32 @@ class Option extends Model
      */
     public static function get($key, $default = self::DEFAULT_VALUE)
     {
+        $default = $default === static::DEFAULT_VALUE ? null : $default;
+
         if (is_null($key)) {
-            if ($default === static::DEFAULT_VALUE) {
-                return null;
-            }
-
-        }
-
-        if (!is_null(config('site-options.hard_defaults.'.$key))) {
-            return config('site-options.hard_defaults.'.$key, $default);
+            return $default;
         }
 
         $afterKey = str_contains($key, '.') ? str($key)->after('.')->toString() : '';
         $key = str($key)->before('.')->toString();
 
+        if (!static::has($key) && !is_null(config('site-options.hard_defaults.' . $key))) {
+            $conf = config('site-options.hard_defaults.' . $key);
+
+            return $afterKey ? Arr::get(
+                Arr::wrap($conf),
+                $afterKey,
+                $default
+            ) : $conf;
+        }
+
         $getOption = function () use ($key) {
             $option = static::where('key', $key)->first();
 
-            return $option->value;
+            return $option ? $option->value : null;
         };
 
-        $cacheKey = config('site-options.cache.key', 'site_options').':'.$key;
+        $cacheKey = config('site-options.cache.key', 'site_options') . ':' . $key;
 
         $returned = config('site-options.cache.enabled', true)
             ? Cache::remember(
@@ -91,8 +96,6 @@ class Option extends Model
                 $getOption
             )
             : $getOption();
-
-        $default = $default === static::DEFAULT_VALUE ? null : $default;
 
         if ($afterKey === '' || is_null($afterKey)) {
             return $returned;
@@ -138,7 +141,7 @@ class Option extends Model
 
         if (config('site-options.cache.enabled', true)) {
             Cache::put(
-                config('site-options.cache.key', 'site_options').':'.$key,
+                config('site-options.cache.key', 'site_options') . ':' . $key,
                 $value,
                 config('site-options.cache.ttl', 60 * 24 * 7)
             );
@@ -159,7 +162,7 @@ class Option extends Model
         $optionWasDeleted = static::where('key', $key)->first()?->delete();
 
         if (config('site-options.cache.enabled', true)) {
-            Cache::forget(config('site-options.cache.key', 'site_options').':'.$key);
+            Cache::forget(config('site-options.cache.key', 'site_options') . ':' . $key);
         }
 
         return $optionWasDeleted;
