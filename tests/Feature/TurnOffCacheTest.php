@@ -8,13 +8,8 @@ use Illuminate\Support\Facades\Cache;
 
 class TurnOffCacheTest extends TestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        parent::getEnvironmentSetUp($app);
-        $app['config']->set('site-options.cache.enabled', false);
-    }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyCacheDisabled()
     {
         $i = 1;

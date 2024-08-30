@@ -20,7 +20,7 @@ class HardDefaultTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionGetWithHardDefault()
     {
         $i = 1;
@@ -31,7 +31,7 @@ class HardDefaultTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionGetDefaultPrecedence()
     {
         $i = 1;
@@ -44,7 +44,7 @@ class HardDefaultTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifySettedValuePrecedence()
     {
         $i = 1;

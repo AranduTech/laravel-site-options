@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class OptionTest extends TestCase
 {
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionSet()
     {
         $i = 1;
@@ -23,7 +23,7 @@ class OptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionGet()
     {
         $i = 1;
@@ -35,7 +35,7 @@ class OptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionRewrite()
     {
         $i = 1;
@@ -48,7 +48,7 @@ class OptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionGetWithDefault()
     {
         $i = 1;
@@ -59,7 +59,7 @@ class OptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionExists()
     {
         $i = 1;
@@ -72,7 +72,7 @@ class OptionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function verifyOptionDelete()
     {
         $i = 1;

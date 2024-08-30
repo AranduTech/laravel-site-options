@@ -8,7 +8,7 @@ use Arandu\LaravelSiteOptions\Support\Serialize;
 class SerializationTest extends TestCase
 {
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function encode()
     {
         foreach ($this->samples as $serialized => $unserialized) {
@@ -16,7 +16,7 @@ class SerializationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function decode()
     {
         foreach ($this->samples as $serialized => $unserialized) {
@@ -24,7 +24,7 @@ class SerializationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function isEncoded()
     {
         foreach ($this->samples as $serialized => $unserialized) {
@@ -33,7 +33,7 @@ class SerializationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function maybeEncode()
     {
         foreach ($this->samples as $serialized => $unserialized) {
@@ -45,7 +45,7 @@ class SerializationTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function maybeDecode()
     {
         foreach ($this->samples as $serialized => $unserialized) {
