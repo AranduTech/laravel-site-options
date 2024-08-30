@@ -1,46 +1,44 @@
-## Advanced Usage
+# Advanced Usage
 
 ### The `Option` Model
 
-The package is built around the `Arandu\LaravelSiteOptions\Option` model, which provides a fluent, expressive API for managing site options. Besides default Model methods, it also provides the following methods:
+At the core of the Laravel Site Options package is the `Arandu\LaravelSiteOptions\Option` model, offering a powerful and expressive API for managing site options. Beyond the standard model methods, it includes specialized methods to make option management seamless:
 
 #### `Option::set(string $key, mixed $value): void`
 
-The `set()` method stores an option in the database, and reflects changes in cache if enabled. It accepts the following parameters:
+The `set()` method stores an option in the database and updates the cache if caching is enabled. It accepts the following parameters:
 
- - `$key`: The option key.
- - `$value`: The option value.
+- **`$key`**: The key identifying the option.
+- **`$value`**: The value to be stored for the option.
 
 #### `Option::get(string $key, mixed $default = null): mixed`
 
-The `get()` method retrieves an option from the database, and caches it if enabled. It accepts the following parameters:
+The `get()` method retrieves an option from the database, with caching handled automatically if enabled. It accepts the following parameters:
 
- - `$key`: The option key.
- - `$default`: The default value to return if the option does not exist. If provided, will override the hard-coded default value set in the config file.
+- **`$key`**: The key identifying the option.
+- **`$default`**: The fallback value returned if the option does not exist. This value takes precedence over any hard-coded default set in the configuration file.
 
 #### `Option::has(string $key): bool`
 
-The `has()` method checks if an option exists in the database. It accepts the following parameters:
+The `has()` method checks for the existence of an option in the database. It accepts the following parameter:
 
- - `$key`: The option key.
+- **`$key`**: The key identifying the option.
 
 #### `Option::rm(string $key): void`
 
-The `rm()` method removes an option from the database, and reflects changes in cache if enabled. It accepts the following parameters:
+The `rm()` method removes an option from the database and updates the cache if caching is enabled. It accepts the following parameter:
 
- - `$key`: The option key.
+- **`$key`**: The key identifying the option to be removed.
 
-### Changing the Database Table Name
+### Customizing the Database Table Name
 
-The package stores options in a database table named `site_options` by default. You can change this table name by editing the `config/site-options.php` file. However, if you have already published the package's migration file, you will need to rename the table in a new migration.
+By default, the package stores options in a table named `site_options`. If you need to change this table name, you can do so by modifying the `config/site-options.php` file. However, note that if you have already published the migration file, you will need to create a new migration to rename the table.
 
-For versions `<= 2.0.0`, the migration included with Laravel Site Options creates a table based on the `config/site-options.php` file. This approach had the advantage of allowing developers to easily customize the table name and columns, but only if the developer did this before distributing or deploying their code. It was difficult to understand what the migration was doing, as the table name was not explicit.
+#### For Versions `<= 2.0.0`
 
-This has been changed in `>= 2.1.0` versions, and the migration will always create a table named `site_options`, which makes renaming the table way more understandable to developers.
+In versions `<= 2.0.0`, the package’s migration file created a table based on the configuration file, allowing developers to easily customize the table name before deployment. However, this approach often made it unclear what the migration was doing since the table name was not explicit.
 
-#### Renaming in `<= 2.0.0` Versions
-
-If you have changed the config file to use a different table name, new installations will work fine, but you will need to rename the table in existing installations. To do so, you can create a new migration that renames the table, like this:
+To rename the table in these versions, you must manually create a migration, as shown below:
 
 ```php
 <?php
@@ -49,11 +47,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class MaybeRenameSiteOptionsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         $newTable = 'custom_table_name';
@@ -64,11 +57,6 @@ class MaybeRenameSiteOptionsTable extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         $newTable = 'custom_table_name';
@@ -81,24 +69,33 @@ class MaybeRenameSiteOptionsTable extends Migration
 }
 ```
 
-#### Renaming in `>= 2.1.0` Versions
+#### For Versions `>= 2.1.0`
 
-Create a new migration to rename the table, or if you haven't migrated yet, change the table name in the `config/site-options.php` file and in the migration published by the package.
+Starting with version `2.1.0`, the package always creates a table named `site_options`, making it clearer and more straightforward for developers to rename it if necessary. To rename the table:
+
+- Create a new migration to rename the table, or
+- If you haven’t migrated yet, adjust the table name in both the `config/site-options.php` file and the published migration file.
 
 ### Serialization
 
-PHP serialization is a fundamental aspect of the Laravel Site Options package. It enables the storage of a wide range of data types in a serialized format, which is essential for storing complex data structures as a string in the database. Here are key points about PHP serialization in this context:
+Serialization is a crucial feature of the Laravel Site Options package, allowing complex data types to be stored as strings in the database. Here’s what you need to know:
 
-1. **What is PHP Serialization?**: Serialization in PHP involves converting PHP variables (like arrays, objects, etc.) into a single string representation. This process allows complex data types to be easily stored and retrieved from a storage medium like a database.
+1. **What is PHP Serialization?**
+   - Serialization converts PHP variables (arrays, objects, etc.) into a string format that can be easily stored in a database.
 
-2. **Usage in Laravel Site Options**: The package utilizes PHP serialization to store and retrieve various data types. For example, you can store an array of settings, and the package will serialize this array to store it in the database. When retrieving, it deserializes the string back into a PHP array.
+2. **Usage in Laravel Site Options**
+   - The package leverages serialization to store complex data structures like arrays and even simple data types. When you save an option, it serializes the data, and when you retrieve it, the package deserializes it back to its original form.
 
-3. **Why serialization?**: We chose serialization because it is a native PHP feature, and it allows storing complex data types in a single string. Serialization is also used by Laravel cache drivers, which makes it even more convenient to use in this package. If something can be cached, it can be stored as an option.
+3. **Why Serialization?**
+   - Serialization is a native PHP feature, making it a reliable way to store diverse data types. It also aligns with Laravel's caching mechanisms, making the data storage process more consistent and convenient.
 
-3. **Recommendations and Best Practices**: While serialization allows storing almost any PHP type, it's advisable to **avoid storing objects as options**. Objects can have references to resources outside their structure, leading to potential issues when deserialized, such as bugs that are difficult to identify and fix. Instead, it's recommended to store primitive data types (strings, integers, booleans) and arrays. Laravel has several tools to transform objects into arrays, which can be stored safely.
+4. **Recommendations and Best Practices**
+   - While you can serialize almost any PHP type, it’s best to **avoid storing objects**. Serialized objects can reference external resources, which may lead to hard-to-debug issues when deserialized. Stick to storing primitive data types (like strings, integers, booleans) and arrays. Laravel provides tools to convert objects into arrays, which are safer to serialize.
 
-4. **Security Considerations**: Serialization can pose security risks, especially if the serialized data is tampered with. This can lead to object injection vulnerabilities if the application attempts to unserialize a maliciously crafted string. It's crucial to ensure that serialized data is not exposed to untrusted sources.
+5. **Security Considerations**
+   - Be cautious with serialization as it can expose your application to security risks if serialized data is tampered with. Maliciously crafted serialized strings can lead to object injection vulnerabilities. Always ensure that serialized data is not exposed to untrusted sources.
 
-5. **Handling Serialization in Laravel Site Options**: The package handles the serialization and deserialization processes internally, abstracting these complexities from the end-user. When you use `Option::set()` and `Option::get()`, the package automatically serializes and deserializes the data, respectively.
+6. **Handling Serialization in Laravel Site Options**
+   - The package abstracts serialization and deserialization, so you don’t have to handle these processes manually. When you use `Option::set()` and `Option::get()`, the package takes care of the serialization and deserialization, ensuring a smooth and secure experience.
 
-By understanding and adhering to these practices regarding PHP serialization, developers can use Laravel Site Options effectively and securely, leveraging its capabilities to manage site settings and configurations efficiently.
+By following these guidelines and understanding how serialization works within the Laravel Site Options package, you can effectively and securely manage site settings and configurations.

@@ -1,4 +1,4 @@
-## Security
+## Best Practices
 
 When using `laravel-site-options`, it's crucial to ensure the security of data, especially when dealing with sensitive information. Here are some guidelines:
 
@@ -12,4 +12,6 @@ When using `laravel-site-options`, it's crucial to ensure the security of data, 
 
 5. **Responsibility**: Remember, securing the data inputted through this package is the responsibility of the developer. Use Laravel's built-in security features to enhance protection.
 
-If you discover any security-related issues, please email to bruno@arandutech.com.br
+## Vulnerabilities
+
+**If you discover any security-related issue, please email to bruno@arandutech.com.br instead of using the issue tracker.**

@@ -60,7 +60,7 @@ class Option extends Model
      *
      * @return mixed Option value
      */
-    public static function get(string $key, $default = self::DEFAULT_VALUE)
+    public static function get(string $key, mixed $default = self::DEFAULT_VALUE)
     {
         if (!static::has($key)) {
             if ($default === static::DEFAULT_VALUE) {
@@ -112,7 +112,7 @@ class Option extends Model
      * @param string $key   Option name
      * @param mixed $value Option value
      */
-    public static function set(string $key, $value)
+    public static function set(string $key, mixed $value)
     {
         $findOption = static::where('key', $key)->first();
         $option = $findOption ?: new static([

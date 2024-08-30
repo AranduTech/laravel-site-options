@@ -7,7 +7,7 @@ return [
     // Cache configuration for site options.
     'cache' => [
         // Whether caching is enabled for site options.
-        'enabled' => env('SITE_OPTIONS_CACHE_ENABLED', true),
+        'enabled' => env('SITE_OPTIONS_CACHE_ENABLED', false),
 
         // The cache key used to store site options.
         // Change this if you have a naming conflict with another cache key.
