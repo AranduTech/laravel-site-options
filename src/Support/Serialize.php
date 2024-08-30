@@ -4,6 +4,32 @@ namespace Arandu\LaravelSiteOptions\Support;
 
 class Serialize
 {
+
+    private static function isUnserializable(mixed $data)
+    {
+        $data = is_string($data) ? trim($data) : null;
+
+        if (!$data || (strlen($data) === 2 && $data !== 'N;') || strlen($data) < 4) {
+            return false;
+        }
+
+        foreach (['N;', ';', ':'] as $partial) {
+            if (
+                (
+                    str_contains($data[1] ?? '', $partial)
+                    || str_contains($data, $partial)
+                ) && (
+                    str_ends_with($data, ';')
+                    || str_ends_with($data, '}')
+                )
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Encode the given value.
      *
@@ -20,9 +46,23 @@ class Serialize
      * @param mixed $value
      * @return mixed
      */
-    public static function decode($value)
+    public static function decode(string $data, ?\Closure $catcher = null)
     {
-        return try_unserialize(trim($value));
+        try {
+            $data = trim($data);
+
+            if (!static::isUnserializable($data)) {
+                return null;
+            }
+
+            return unserialize($data);
+        } catch (\Throwable $th) {
+            if ($catcher) {
+                $catcher($th);
+            }
+
+            return null;
+        }
     }
 
     /**

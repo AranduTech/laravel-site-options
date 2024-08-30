@@ -60,9 +60,9 @@ class Option extends Model
      *
      * @return mixed Option value
      */
-    public static function get($key, $default = self::DEFAULT_VALUE)
+    public static function get(string $key, $default = self::DEFAULT_VALUE)
     {
-        if (is_null($key) || !static::has($key)) {
+        if (!static::has($key)) {
             if ($default === static::DEFAULT_VALUE) {
                 if (!is_null(config('site-options.hard_defaults.'.$key))) {
                     return config('site-options.hard_defaults.'.$key);
@@ -93,11 +93,11 @@ class Option extends Model
     /**
      * Check if an option exists
      *
-     * @param ?string $key   Option name
+     * @param string $key   Option name
      *
      * @return bool
      */
-    public static function has(?string $key)
+    public static function has(string $key)
     {
         if (!filled($key)) {
             return false;
@@ -109,15 +109,11 @@ class Option extends Model
     /**
      * Set the value of an option
      *
-     * @param ?string $key   Option name
+     * @param string $key   Option name
      * @param mixed $value Option value
      */
-    public static function set(?string $key, $value)
+    public static function set(string $key, $value)
     {
-        if (!filled($key)) {
-            return false;
-        }
-
         $findOption = static::where('key', $key)->first();
         $option = $findOption ?: new static([
             'key' => $key,
@@ -137,9 +133,9 @@ class Option extends Model
     /**
      * Remove an option
      *
-     * @param ?string $key Option name
+     * @param string $key Option name
      */
-    public static function rm(?string $key)
+    public static function rm(string $key)
     {
         if (!filled($key)) {
             return false;
