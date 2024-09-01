@@ -3,6 +3,7 @@
 namespace Arandu\LaravelSiteOptions;
 
 use Arandu\LaravelSiteOptions\Support\Serialize;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -29,27 +30,12 @@ class Option extends Model
         return config('site-options.table', 'site_options');
     }
 
-    /**
-     * Accessor function to get the value of the option.
-     *
-     * @param string $value
-     *
-     * @return mixed
-     */
-    public function getValueAttribute($value)
+    public function value(): Attribute
     {
-
-        return Serialize::maybeDecode($value);
-    }
-
-    /**
-     * Mutator function to set the value of the option.
-     *
-     * @param mixed $value
-     */
-    public function setValueAttribute($value)
-    {
-        $this->attributes['value'] = Serialize::maybeEncode($value);
+        return Attribute::make(
+            get: fn ($value) => Serialize::maybeDecode($value),
+            set: fn ($value) => Serialize::maybeEncode($value),
+        );
     }
 
     /**
