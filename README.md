@@ -82,7 +82,7 @@ Refer to the table below to match your Laravel version with the appropriate Lara
 | 8.x               | 1.x                  |
 | 9.x               | 2.x                  |
 | 10.x              | 3.x                  |
-| 11.x              | 4.x                  |
+| 11.x, 12.x, 13.x  | 4.x                  |
 
 ## 🛠️ Testing
 
