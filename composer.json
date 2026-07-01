@@ -18,8 +18,8 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/support": "^11.0",
-        "illuminate/database": "^11.0"
+        "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/database": "^11.0 || ^12.0 || ^13.0"
     },
     "extra": {
         "laravel": {
@@ -29,8 +29,8 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "~11.0",
-        "orchestra/testbench": "^9.0"
+        "phpunit/phpunit": "^11.0 || ^12.0",
+        "orchestra/testbench": "^9.0 || ^10.0 || ^11.0"
     },
     "scripts": {
         "test": "vendor/bin/phpunit"
